@@ -1,0 +1,95 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Mike",
+	"patterns": [
+		{ "include": "#numbers" },
+		{ "include": "#comments" },
+		{ "include": "#keywords" },
+		{ "include": "#strings" },
+		{ "include": "#identifiers" }
+	],
+	"repository": {
+		"numbers": {
+			"patterns": [
+				{
+					"name": "constant.numeric.int.mike",
+					"match": "\\b[+-]?[0-9]+\\b"
+				},
+				{
+					"name": "constant.numeric.float.mike",
+					"match": "\\b[+-]?[0-9]*(?:[0-9]\\.|\\.[0-9]+(?:[eE][+-]?[0-9]+)?|[0-9][eE][+-]?[0-9]+)\\b"
+				}
+			]
+		},
+		"identifiers": {
+			"patterns": [
+				{
+					"name": "support.type.primitive.mike",
+					"match": "\\b(int|float|boolean|string|unit|option)\\b"
+				},
+				{
+					"name": "support.type.mike",
+					"match": "\\b_*[A-Z]\\w*\\b"
+				},
+				{
+					"match": "\\b(\\w+)(\\()",
+					"captures": {
+						"1": { "name": "entity.name.function.mike" }
+					}
+				},
+				{
+					"name": "variable.mike",
+					"match": "\\b(?:_\\w*|[a-z]\\w*)\\b"
+				}
+			]
+		},
+		"keywords": {
+			"patterns": [
+				{
+					"name": "storage.type.mike",
+					"match": "\\b(param|state|let|debug)\\b"
+				},
+				{
+					"name": "keyword.control.mike",
+					"match": "\\b(if|else|on)\\b"
+				},
+				{
+					"name": "storage.type.type.mike",
+					"match": "\\b(type)\\b"
+				}
+			]
+		},
+		"strings": {
+			"patterns": [
+				{
+					"name": "string.quoted.double.mike",
+					"begin": "\"",
+					"end": "\"",
+					"patterns": [
+						{
+							"name": "constant.character.escape.mike",
+							"match": "\\\\."
+						}
+					]
+				},
+				{
+					"name": "string.quoted.single.mike",
+					"begin": "'",
+					"end": "'",
+					"patterns": [
+						{
+							"name": "constant.character.escape.mike",
+							"match": "\\\\."
+						}
+					]
+				}
+			]
+		},
+		"comments": {
+			"name": "comment.line.double-slash",
+			"begin": "//",
+			"end": "\\n"
+		}
+	},
+	"scopeName": "source.mike"
+}

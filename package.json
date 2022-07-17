@@ -1,0 +1,25 @@
+{
+    "name": "mike-vscode",
+    "displayName": "Mike Language Support",
+    "description": "Support for the Mike language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.69.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "mike",
+            "aliases": ["Mike", "mike"],
+            "extensions": [".mike"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "mike",
+            "scopeName": "source.mike",
+            "path": "./syntaxes/mike.tmLanguage.json"
+        }]
+    }
+}
