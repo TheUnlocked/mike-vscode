@@ -1,8 +1,16 @@
 {
     "name": "mike-vscode",
     "displayName": "MiKe Language Support",
-    "description": "Support for the MiKe language",
+    "description": "Language support for the MiKe language",
     "version": "0.1.0",
+    "author": {
+        "name": "Trevor Paley",
+        "url": "https://github.com/TheUnlocked"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/TheUnlocked/mike-vscode.git"
+    },
     "categories": [
         "Programming Languages"
     ],
