@@ -2,22 +2,36 @@
 
 ## Features
 
-* Provides basic syntax highlighting for MiKe (.mike) files.
+* Hover details
+* Signature hints
+* Variable completion
+* Member completion
+* Go to definition
+* Syntax highlighting
+* Semantic highlighting
+* `mikeconfig.ts` file support
 
 ## Requirements
 
-None
-
 ## Extension Settings
 
-None
+_TBD_
 
 ## Known Issues
 
-Very barebones at the moment.
+* Type completion is not available
 
 ## Release Notes
 
-### 0.0.1
+### 0.1.0
 
-Initial release. Includes basic syntax highlighting
+Initial release.
+
+* Hover details
+* Signature hints
+* Variable completion
+* Member completion
+* Go to definition
+* Syntax highlighting
+* Semantic highlighting
+* `mikeconfig.ts` files
