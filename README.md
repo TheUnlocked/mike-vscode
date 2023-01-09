@@ -2,7 +2,7 @@
 
 ## Features
 
-* Provides basic syntax highlighting for Mike (.mike) files.
+* Provides basic syntax highlighting for MiKe (.mike) files.
 
 ## Requirements
 

@@ -1,6 +1,6 @@
 {
 	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Mike",
+	"name": "MiKe",
 	"patterns": [
 		{ "include": "#numbers" },
 		{ "include": "#comments" },
@@ -23,6 +23,14 @@
 		},
 		"identifiers": {
 			"patterns": [
+				{
+					"name": "constant.language.boolean.true.mike",
+					"match": "\\btrue\\b"
+				},
+				{
+					"name": "constant.language.boolean.false.mike",
+					"match": "\\bfalse\\b"
+				},
 				{
 					"name": "support.type.primitive.mike",
 					"match": "\\b(int|float|boolean|string|unit|option)\\b"

@@ -1,0 +1,15 @@
+{
+	"name": "mike-client",
+	"description": "MiKe language server client for VSCode",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.63.0"
+	},
+	"dependencies": {
+		"ts-node": "^10.9.1",
+		"vscode-languageclient": "^7.0.0"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.63.0"
+	}
+}
