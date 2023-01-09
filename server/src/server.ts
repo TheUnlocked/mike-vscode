@@ -95,8 +95,10 @@ connection.onInitialized(async () => {
 		});
 	}
 
-    connection.sendRequest<string>('mike/getMikeConfigUri')
-        .then(loadMiKeConfig);
+    const configUri = await connection.sendRequest<string | null>('mike/getMikeConfigUri');
+    if (configUri) {
+        loadMiKeConfig(configUri);
+    }
 });
 
 // The example settings

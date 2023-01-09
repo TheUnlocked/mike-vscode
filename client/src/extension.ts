@@ -1,10 +1,11 @@
+import { execSync } from 'child_process';
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { ExtensionContext, window, workspace } from 'vscode';
 
 import {
+	ForkOptions,
 	LanguageClient,
 	LanguageClientOptions,
-	NotificationType,
 	ServerOptions,
 	TransportKind
 } from 'vscode-languageclient/node';
@@ -17,28 +18,43 @@ export async function activate(context: ExtensionContext) {
 		path.join('server', 'out', 'server.js')
 	);
 
+	const out = window.createOutputChannel('MiKe Language Client');
+	
+	const cwd = workspace.workspaceFolders[0]?.uri.fsPath;
+	out.appendLine(`CWD: ${cwd}`);
+
+	let options: ForkOptions;
+	try {
+		execSync(`node -e "require('ts-node')"`, { cwd });
+		// ts-node is available
+		out.appendLine('ts-node available');
+		options = {
+			cwd,
+			execArgv: ['--loader', 'ts-node/esm'],
+			env: {
+				'TS_NODE_TRANSPILE_ONLY': '1',
+			},
+		};
+	}
+	catch (e) {
+		out.appendLine('ts-node not available');
+		options = {
+			cwd
+		};
+	}
+
 	// If the extension is launched in debug mode then the debug server options are used
 	// Otherwise the run options are used
 	const serverOptions: ServerOptions = {
 		run: {
 			module: serverModule,
 			transport: TransportKind.ipc,
-			options: {
-				execArgv: ['--loader', 'ts-node/esm'],
-				env: {
-					'TS_NODE_TRANSPILE_ONLY': '1',
-				},
-			},
+			options,
 		},
 		debug: {
 			module: serverModule,
 			transport: TransportKind.ipc,
-			options: {
-				execArgv: ['--loader', 'ts-node/esm'],
-				env: {
-					'TS_NODE_TRANSPILE_ONLY': '1',
-				},
-			},
+			options,
 		},
 	};
 
