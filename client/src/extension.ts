@@ -33,6 +33,7 @@ export async function activate(context: ExtensionContext) {
 			execArgv: ['--loader', 'ts-node/esm'],
 			env: {
 				'TS_NODE_TRANSPILE_ONLY': '1',
+				'TS_NODE_SKIP_PROJECT': '1',
 			},
 		};
 	}
