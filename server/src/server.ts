@@ -1,9 +1,9 @@
 import {
     CompletionItem,
     CompletionItemKind, createConnection, Diagnostic as LspDiagnostic,
-    DiagnosticSeverity, DidChangeConfigurationNotification, InitializeParams, InitializeResult, LocationLink, NotificationType,
+    DiagnosticSeverity, DidChangeConfigurationNotification, InitializeParams, InitializeResult, LocationLink,
     ParameterInformation,
-    Position as LspPosition, ProposedFeatures, Range as LspRange, SemanticTokensBuilder, SemanticTokensRequest, SignatureHelp, SignatureInformation, TextDocumentPositionParams,
+    Position as LspPosition, ProposedFeatures, Range as LspRange, SemanticTokensBuilder, SemanticTokensRequest, SignatureInformation,
     TextDocumentSyncKind, VersionedTextDocumentIdentifier
 } from 'vscode-languageserver/node';
 
@@ -13,7 +13,7 @@ import {
 import { URI } from 'vscode-uri';
 
 import { MiKe } from '@necode-org/mike';
-import { AnyNode, ASTNodeKind, Expression, getNodeAt, getNodeSourceRange, Identifier, inRange, isAfter, isExpression, Position as MiKePosition, Range as MiKeRange, TypeIdentifier, VariableDefinition, visit } from '@necode-org/mike/ast';
+import { AnyNode, ASTNodeKind, getNodeAt, getNodeSourceRange, Identifier, inRange, isAfter, isExpression, Position as MiKePosition, Range as MiKeRange, positionEquals, TypeIdentifier, VariableDefinition, visit } from '@necode-org/mike/ast';
 import { createMiKeDiagnosticsManager, Diagnostic as MiKeDiagnostic, DiagnosticsManager, Severity } from '@necode-org/mike/diagnostics';
 import { LibraryInterface } from '@necode-org/mike/library';
 import { isKeyword, isOperator, isTrivia, Token, TokenType } from '@necode-org/mike/parser';
@@ -201,17 +201,17 @@ connection.onDidChangeTextDocument(({ textDocument, contentChanges }) => {
         const { mike, doc } = entry;
         
         for (const change of contentChanges) {
+            if ('range' in change) {
+                const startByte = doc.offsetAt(change.range.start);
+                const endByte = doc.offsetAt(change.range.end);
+                connection.console.log(`Delta: ${startByte}-${endByte}: ${change.text}`);
+                mike.editScript(startByte, endByte - startByte, change.text);
+            }
+            else {
+                mike.loadScript(change.text);
+            }
+            entry.validated = false;
             TextDocument.update(doc, [change], textDocument.version);
-            // TODO: Re-enable once incremental diagnostics are functional
-            // if ('range' in change) {
-            //     const startByte = doc.offsetAt(change.range.start);
-            //     const endByte = doc.offsetAt(change.range.end);
-            //     mike.editScript(startByte, endByte - startByte, change.text);
-            // }
-            // else {
-            //     mike.loadScript(change.text);
-            // }
-            mikeInstances.set(textDocument.uri, { ...loadInstance(doc.getText()), doc });
         }
         validateTextDocument(textDocument);
     }
@@ -228,7 +228,7 @@ function mikeToLspRange(range: MiKeRange): LspRange {
         },
         end: {
             line: Math.max(0, range.end.line - 1),
-            character: Math.max(0, range.end.col - 1),
+            character: Math.max(0, range.end.col - 1 + (positionEquals(range.start, range.end) ? 1 : 0)),
         },
     };
 }
@@ -281,7 +281,7 @@ async function validateTextDocument(textDocument: VersionedTextDocumentIdentifie
     if (!validated) {
         mike.validate();
         entry.validated = true;
-        connection.console.log(`Ran mike.validate() in ${textDocument.uri}`);    
+        connection.console.log(`Ran mike.validate() in ${textDocument.uri}`);
         const mikeDiagnostics = diagnosticsManager.getDiagnostics().slice(0, settings.maxNumberOfProblems);
         const lspDiagnostics = mikeDiagnostics.map(mikeToLspDiagnostic);
     
@@ -384,10 +384,10 @@ connection.onRequest(SemanticTokensRequest.method, (({ textDocument }) => {
 
     for (const token of mike.root.tokens!) {
         if (isOperator(token)) {
-            push(token, 'operator');
+            // push(token, 'operator');
         }
         else if (isKeyword(token)) {
-            push(token, 'keyword');
+            // push(token, 'keyword');
         }
         else {
             switch (token.type) {
@@ -458,7 +458,6 @@ connection.onHover(({ position, textDocument }) => {
     // connection.console.log(`Hovered over ${JSON.stringify(lspToMikePosition(position))}`)
     let hovered = getNodeAt(mike.root, lspToMikePosition(position));
     if (hovered) {
-
         let type: KnownType | undefined;
         let exprText: string | undefined;
         let varPrefix = '';

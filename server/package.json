@@ -7,7 +7,7 @@
 		"node": "*"
 	},
 	"dependencies": {
-		"@necode-org/mike": "^0.2.8",
+		"@necode-org/mike": "^0.3.8",
 		"ts-node": "^10.9.1",
 		"vscode-languageserver": "^7.0.0",
 		"vscode-languageserver-textdocument": "^1.0.4",
